@@ -6,6 +6,33 @@ const LoginPage = () => {
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
 
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setLoading(true);
+    setError("");
+
+    try {
+      // Simulate an API call for login
+      await new Promise((resolve, reject) => {
+        setTimeout(() => {
+          if (username === "user" && password === "pass") {
+            resolve("Login successful");
+          } else {
+            reject("Invalid username or password");
+          }
+        }, 1000);
+      });
+
+      // Redirect to notes page or perform further actions
+      alert("Login successful!");
+      // Here you can redirect to another page or update the app state
+    } catch (err) {
+      setError(err as string);
+    } finally {
+      setLoading(false);
+    }
+  };
+
   return (
     <div
       style={{
@@ -19,7 +46,7 @@ const LoginPage = () => {
     >
       <h1>Login to access your notes</h1>
       <form
-        onSubmit={() => {}}
+        onSubmit={handleSubmit}
         style={{
           display: "flex",
           flexDirection: "column",
