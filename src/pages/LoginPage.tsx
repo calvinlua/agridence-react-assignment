@@ -1,4 +1,6 @@
 import React, { useState } from "react";
+import users from "../data/users.json"; // Assuming you have a JSON file with user data
+import { useNavigate } from "react-router-dom";
 
 const LoginPage = () => {
   const [username, setUsername] = useState("");
@@ -6,17 +8,25 @@ const LoginPage = () => {
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
 
+  const navigate = useNavigate();
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
     setError("");
 
+    const user = users.find(
+      (u) => u.username === username && u.password === password
+    );
+
     try {
       // Simulate an API call for login
       await new Promise((resolve, reject) => {
         setTimeout(() => {
-          if (username === "user" && password === "pass") {
+          // if user exist
+          if (user) {
             resolve("Login successful");
+            navigate("/main"); // Redirect to main page
           } else {
             reject("Invalid username or password");
           }

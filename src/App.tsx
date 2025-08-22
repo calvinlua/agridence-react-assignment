@@ -7,6 +7,7 @@ import {
   RouterProvider,
 } from "react-router-dom";
 import LoginPage from "./pages/LoginPage";
+import NotesPage from "./pages/main/NotesPage";
 
 const router = createBrowserRouter([
   {
@@ -19,6 +20,12 @@ const router = createBrowserRouter([
         element: <Navigate to="/login" replace />,
       },
     ],
+  },
+  {
+    path: "/main",
+    element: <NotesPage />,
+    errorElement: <div>Not Found</div>,
+    children: [],
   },
 ]);
 
