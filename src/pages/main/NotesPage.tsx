@@ -1,11 +1,7 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
 import NoteDetailModal from "../../components/NoteDetailModal";
-interface Note {
-  id: number;
-  title: string;
-  description: string;
-}
+import { Note } from "../../models/Note";
 
 const NotesPage = () => {
   const navigate = useNavigate();
@@ -18,8 +14,18 @@ const NotesPage = () => {
   const [selectedNote, setSelectedNote] = React.useState<Note | undefined>(
     undefined
   );
+  const [editMode, setEditMode] = React.useState<boolean>(false);
+
   console.log(selectedNote);
-  const handleEdit = (note: Note) => {};
+  const handleEdit = (note: Note) => {
+    // Optionally, you can open a modal or navigate to an edit page
+    setSelectedNote(note);
+    setEditMode(true);
+  };
+  const handleView = (note: Note) => {
+    setSelectedNote(note);
+    setEditMode(false);
+  };
   const handleDelete = (noteId: number) => {};
   const handleSubmit = (e: React.FormEvent) => e.preventDefault();
   const onLogout = () => {
@@ -100,6 +106,7 @@ const NotesPage = () => {
                 </span>
               </div>
               <div style={{ display: "flex", gap: "5px" }}>
+                <button onClick={() => handleView(note)}>View</button>
                 <button onClick={() => handleEdit(note)}>Edit</button>
                 <button onClick={() => handleDelete(note.id)}>Delete</button>
               </div>
@@ -107,12 +114,11 @@ const NotesPage = () => {
           ))}
         </ul>
       </div>
-
-      {/* Note Detail Modal - for Option 1 */}
       {selectedNote && (
         <NoteDetailModal
-          note={selectedNote}
+          initialNote={selectedNote}
           onClose={() => setSelectedNote(undefined)}
+          isEditMode={editMode}
         />
       )}
     </div>
