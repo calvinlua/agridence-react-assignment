@@ -1,8 +1,9 @@
 import React, { useRef, useState } from "react";
-import users from "../data/users.json";
+import users from "../../data/users.json";
 import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
-import { successLogin } from "../data/account/accountSlice";
+import { successLogin } from "../../data/account/accountSlice";
+import "./LoginPage.css";
 
 const LoginPage = () => {
   const [error, setError] = useState("");
@@ -17,6 +18,12 @@ const LoginPage = () => {
     e.preventDefault();
     setLoading(true);
     setError("");
+
+    if (!usernameRef.current || !passwordRef.current) {
+      setError("Username and password fields are required.");
+      setLoading(false);
+      return;
+    }
 
     const username = usernameRef.current?.value;
     const password = passwordRef.current?.value;
@@ -37,7 +44,6 @@ const LoginPage = () => {
       });
 
       dispatch(successLogin(user));
-
       navigate("/");
     } catch (err) {
       setError(err as string);
@@ -47,26 +53,9 @@ const LoginPage = () => {
   };
 
   return (
-    <div
-      style={{
-        display: "flex",
-        flexDirection: "column",
-        maxWidth: "400px",
-        margin: "auto",
-        textAlign: "center",
-        padding: "20px",
-      }}
-    >
+    <div className="login-container">
       <h1>Login to access your notes</h1>
-      <form
-        onSubmit={handleSubmit}
-        style={{
-          display: "flex",
-          flexDirection: "column",
-          gap: "10px",
-          marginTop: "20px",
-        }}
-      >
+      <form onSubmit={handleSubmit} className="login-form">
         <div>
           <label htmlFor="username"> Username : </label>
           <input
@@ -91,7 +80,7 @@ const LoginPage = () => {
           </button>
         </div>
       </form>
-      {error && <p style={{ color: "red" }}>{error}</p>}
+      {error && <p className="error-message">{error}</p>}
     </div>
   );
 };

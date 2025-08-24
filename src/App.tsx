@@ -4,7 +4,7 @@ import {
   Navigate,
   RouterProvider,
 } from "react-router-dom";
-import LoginPage from "./pages/LoginPage";
+import LoginPage from "./pages/login/LoginPage";
 import NotesPage from "./pages/main/NotesPage";
 import { Provider } from "react-redux";
 import { persistor, store } from "./data/store/store";
