@@ -1,0 +1,41 @@
+.notes-container {
+  display: flex;
+  flex-direction: column;
+  padding: 20px;
+}
+
+.notes-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.add-button {
+  align-self: flex-end;
+}
+
+.notes-list {
+  list-style-type: none;
+  padding: 0px;
+}
+
+.note-item {
+  border: 1px solid #ccc;
+  padding: 10px;
+  margin: 10px 0px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.note-title {
+  flex: 1;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.note-actions {
+  display: flex;
+  gap: 5px;
+}

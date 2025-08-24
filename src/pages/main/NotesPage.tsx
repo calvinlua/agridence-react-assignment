@@ -1,11 +1,12 @@
 import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import NoteDetailModal from "../../components/NoteDetailModal";
+import NoteDetailModal from "../../components/modal/NoteDetailModal";
 import { logout } from "../../data/account/accountSlice";
 import { deleteNote, updateNote, addNote } from "../../data/notes/notesSlice";
 import { RootState } from "../../data/store/store";
 import { Note } from "../../models/Note";
 import { useNavigate } from "react-router-dom";
+import "./NotesPage.css";
 
 const NotesPage = () => {
   const dispatch = useDispatch();
@@ -58,43 +59,23 @@ const NotesPage = () => {
   };
 
   return (
-    <div style={{ display: "flex", flexDirection: "column", padding: "20px" }}>
-      <div
-        style={{
-          display: "flex",
-          justifyContent: "space-between",
-          alignItems: "center",
-          marginBottom: "20px",
-        }}
-      >
+    <div className="notes-container">
+      <div className="notes-header">
         <h1>My Personal Notes</h1>
         <button onClick={onLogout}>Logout</button>
       </div>
 
-      <button onClick={handleAddClick} style={{ alignSelf: "flex-end" }}>
+      <button onClick={handleAddClick} className="add-button">
         Add Note
       </button>
 
-      <ul style={{ listStyleType: "none", padding: 0 }}>
+      <ul className="notes-list">
         {notes.map((note) => (
-          <li
-            key={note.id}
-            style={{
-              border: "1px solid #ccc",
-              padding: "10px",
-              margin: "10px 0",
-              display: "flex",
-              justifyContent: "space-between",
-              alignItems: "center",
-            }}
-          >
-            <span
-              style={{ flex: 1, fontWeight: "bold", cursor: "pointer" }}
-              onClick={() => handleView(note)}
-            >
+          <li key={note.id} className="note-item">
+            <span className="note-title" onClick={() => handleView(note)}>
               {note.title}
             </span>
-            <div style={{ display: "flex", gap: "5px" }}>
+            <div className="note-actions">
               <button onClick={() => handleView(note)}>View</button>
               <button onClick={() => handleEdit(note)}>Edit</button>
               <button onClick={() => handleDelete(note.id!)}>Delete</button>

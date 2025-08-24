@@ -31,7 +31,7 @@ const LoginPage = () => {
           if (user) {
             resolve(user);
           } else {
-            reject("Invalid username or password");
+            reject("invalid username/password");
           }
         }, 1000);
       });

@@ -1,37 +1,6 @@
 import React, { useState } from "react";
-import { Note } from "../models/Note";
-
-const modalOverlayStyle: React.CSSProperties = {
-  position: "fixed",
-  top: 0,
-  left: 0,
-  right: 0,
-  bottom: 0,
-  backgroundColor: "rgba(0, 0, 0, 0.5)",
-  display: "flex",
-  justifyContent: "center",
-  alignItems: "center",
-  zIndex: 9999,
-};
-
-const modalContentStyle: React.CSSProperties = {
-  backgroundColor: "white",
-  padding: "20px",
-  borderRadius: "5px",
-  maxWidth: "500px",
-  width: "90%",
-  position: "relative",
-};
-
-const closeButtonStyle: React.CSSProperties = {
-  position: "absolute",
-  top: "10px",
-  right: "10px",
-  background: "transparent",
-  border: "none",
-  fontSize: "1.5rem",
-  cursor: "pointer",
-};
+import { Note } from "../../models/Note";
+import "./NoteDetailModal.css";
 
 interface NoteDetailModalProps {
   note: Note | null;
@@ -67,9 +36,9 @@ const NoteDetailModal: React.FC<NoteDetailModalProps> = ({
   };
 
   return (
-    <div style={modalOverlayStyle}>
-      <div style={modalContentStyle}>
-        <button onClick={onClose} style={closeButtonStyle}>
+    <div className="modal-overlay">
+      <div className="modal-content">
+        <button onClick={onClose} className="close-button">
           &times;
         </button>
         {isEdit ? (
@@ -85,11 +54,7 @@ const NoteDetailModal: React.FC<NoteDetailModalProps> = ({
                 value={formData.title}
                 onChange={handleFormChange}
                 required
-                style={{
-                  width: "100%",
-                  padding: "10px",
-                  boxSizing: "border-box",
-                }}
+                className="modal-input"
               />
               <textarea
                 name="description"
@@ -98,17 +63,9 @@ const NoteDetailModal: React.FC<NoteDetailModalProps> = ({
                 onChange={handleFormChange}
                 rows={5}
                 required
-                style={{
-                  width: "100%",
-                  padding: "10px",
-                  boxSizing: "border-box",
-                  resize: "none",
-                }}
+                className="modal-textarea"
               />
-              <button
-                type="submit"
-                style={{ alignSelf: "center", width: "100px" }}
-              >
+              <button type="submit" className="modal-button">
                 Save
               </button>
             </form>
