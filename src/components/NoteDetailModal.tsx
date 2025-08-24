@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { Note } from "../models/Note";
 
 const modalOverlayStyle: React.CSSProperties = {
@@ -11,7 +11,7 @@ const modalOverlayStyle: React.CSSProperties = {
   display: "flex",
   justifyContent: "center",
   alignItems: "center",
-  zIndex: 9999, // Make sure it is on top of everything
+  zIndex: 9999,
 };
 
 const modalContentStyle: React.CSSProperties = {
@@ -33,18 +33,38 @@ const closeButtonStyle: React.CSSProperties = {
   cursor: "pointer",
 };
 
-const NoteDetailModal = ({
-  initialNote,
-  onClose,
-  isEditMode = false,
-}: {
-  initialNote: Note;
+interface NoteDetailModalProps {
+  note: Note | null;
+  isEdit: boolean;
   onClose: () => void;
-  isEditMode?: boolean;
-}) => {
-  const [note, setNote] = React.useState<Note>(initialNote);
+  onSave: (note: Note) => void;
+}
 
-  const handleSubmit = (e: React.FormEvent) => {};
+const NoteDetailModal: React.FC<NoteDetailModalProps> = ({
+  note,
+  isEdit,
+  onClose,
+  onSave,
+}) => {
+  const [formData, setFormData] = useState<Note>(
+    note || { id: null, title: "", description: "" }
+  );
+
+  const handleFormChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+  ) => {
+    setFormData({
+      ...formData,
+      [e.target.name]: e.target.value,
+    });
+  };
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (formData.title.trim() && formData.description.trim()) {
+      onSave(formData);
+    }
+  };
 
   return (
     <div style={modalOverlayStyle}>
@@ -52,93 +72,42 @@ const NoteDetailModal = ({
         <button onClick={onClose} style={closeButtonStyle}>
           &times;
         </button>
-        {isEditMode ? (
+        {isEdit ? (
           <div>
-            <h2>Edit Note</h2>
-            {/* Inputs for editing the note */}
+            <h2>{formData.id ? "Edit Note" : "Add Note"}</h2>
             <form
-              style={{
-                display: "flex",
-                flexDirection: "column",
-                // gap: "10px",
-                marginBottom: "20px",
-              }}
+              onSubmit={handleSubmit}
+              style={{ display: "flex", flexDirection: "column", gap: "10px" }}
             >
-              <div>
-                <input
-                  name="title"
-                  placeholder="Note Title"
-                  value={note.title || ""}
-                  onChange={(e) => {
-                    // Handle title change if needed
-                    const updatedNote = { ...note, title: e.target.value }; // Create a new object
-                    setNote(updatedNote); // Update the state with the new note object
-                    console.log("Title changed to:", e.target.value);
-                    note.title = e.target.value; // Update the note title
-                    console.log("Updated note:", note);
-
-                    // TODO: dispatch an action or call a function to save the updated note
-                  }}
-                  style={{
-                    flex: 1,
-                    width: "100%",
-                    marginTop: "10px",
-                    padding: "10px",
-                    boxSizing: "border-box", // Ensure padding is included in width
-                    resize: "none", // Prevent resizing
-                    maxWidth: "100%", // Ensure it doesn't overflow
-                  }}
-                  required
-                />
-                <p style={{ fontSize: "10px", justifySelf: "flex-end" }}>
-                  {50 - (note.title?.length || 0)}/ 50 characters remaining
-                </p>
-              </div>
-              <div>
-                <textarea
-                  name="description"
-                  placeholder="Note Description"
-                  value={note.description || ""}
-                  rows={5}
-                  style={{
-                    width: "100%",
-                    height: "250px", // Fixed height
-                    marginTop: "10px",
-                    resize: "none", // Prevent resizing
-                    maxWidth: "100%", // Ensure it doesn't overflow
-                    overflowY: "auto", // Add scroll if content overflows
-                    overflowX: "hidden", // Hide horizontal overflow
-                  }}
-                  onChange={(e) => {
-                    // Handle description change if needed
-
-                    const updatedNote = {
-                      ...note,
-                      description: e.target.value,
-                    }; // Create a new object
-                    setNote(updatedNote); // Update state
-
-                    console.log("Description changed to:", e.target.value);
-                    note.description = e.target.value; // Update the note description
-                    console.log("Updated note:", note);
-                    // TODO: dispatch an action or call a function to save the updated note
-                  }}
-                  required
-                />
-                <p style={{ fontSize: "10px", justifySelf: "flex-end" }}>
-                  {1500 - (note.description?.length || 0)} / 1500 characters
-                  remaining
-                </p>
-              </div>
-
+              <input
+                name="title"
+                placeholder="Note Title"
+                value={formData.title}
+                onChange={handleFormChange}
+                required
+                style={{
+                  width: "100%",
+                  padding: "10px",
+                  boxSizing: "border-box",
+                }}
+              />
+              <textarea
+                name="description"
+                placeholder="Note Description"
+                value={formData.description}
+                onChange={handleFormChange}
+                rows={5}
+                required
+                style={{
+                  width: "100%",
+                  padding: "10px",
+                  boxSizing: "border-box",
+                  resize: "none",
+                }}
+              />
               <button
                 type="submit"
-                onSubmit={handleSubmit}
-                style={{
-                  width: "100px",
-                  alignSelf: "center",
-                  marginTop: "10px",
-                }}
+                style={{ alignSelf: "center", width: "100px" }}
               >
                 Save
               </button>
@@ -146,8 +115,8 @@ const NoteDetailModal = ({
           </div>
         ) : (
           <div>
-            <h3>{note.title}</h3>
-            <p>{note.description}</p>
+            <h2>{note?.title}</h2>
+            <p>{note?.description}</p>
           </div>
         )}
       </div>

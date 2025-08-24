@@ -1,5 +1,3 @@
-import React from "react";
-import logo from "./logo.svg";
 import "./App.css";
 import {
   createBrowserRouter,
@@ -8,29 +6,41 @@ import {
 } from "react-router-dom";
 import LoginPage from "./pages/LoginPage";
 import NotesPage from "./pages/main/NotesPage";
+import { Provider } from "react-redux";
+import { persistor, store } from "./data/store/store";
+import { PersistGate } from "redux-persist/integration/react";
+import ProtectedRoute from "./components/ProtectedRoute";
 
 const router = createBrowserRouter([
   {
-    path: "/",
+    path: "/login",
     element: <LoginPage />,
     errorElement: <div>Not Found</div>,
-    children: [
-      {
-        index: true,
-        element: <Navigate to="/login" replace />,
-      },
-    ],
   },
   {
-    path: "/main",
-    element: <NotesPage />,
-    errorElement: <div>Not Found</div>,
-    children: [],
+    element: <ProtectedRoute />,
+    children: [
+      {
+        path: "/",
+        element: <Navigate to="/main" replace />,
+      },
+      {
+        path: "/main",
+        element: <NotesPage />,
+        errorElement: <div>Not Found</div>,
+      },
+    ],
   },
 ]);
 
 function App() {
-  return <RouterProvider router={router} />;
+  return (
+    <Provider store={store}>
+      <PersistGate loading={null} persistor={persistor}>
+        <RouterProvider router={router} />
+      </PersistGate>
+    </Provider>
+  );
 }
 
 export default App;
