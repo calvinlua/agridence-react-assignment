@@ -16,8 +16,7 @@ const ProtectedRoute = ({
     return <Navigate to="/login" replace />;
   }
 
-  // Use the children prop directly, as it's guaranteed to be a valid element
-  return <>{children}</>;
+  return <Outlet />;
 };
 
 export default ProtectedRoute;

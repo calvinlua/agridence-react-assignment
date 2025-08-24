@@ -1,41 +1,44 @@
-import React, { useState } from "react";
-import users from "../data/users.json"; // Assuming you have a JSON file with user data
+import React, { useRef, useState } from "react";
+import users from "../data/users.json";
 import { useNavigate } from "react-router-dom";
+import { useDispatch } from "react-redux";
+import { successLogin } from "../data/account/accountSlice";
 
 const LoginPage = () => {
-  const [username, setUsername] = useState("");
-  const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
+  const usernameRef = useRef<HTMLInputElement>(null);
+  const passwordRef = useRef<HTMLInputElement>(null);
 
   const navigate = useNavigate();
+  const dispatch = useDispatch();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
     setError("");
 
+    const username = usernameRef.current?.value;
+    const password = passwordRef.current?.value;
+
     const user = users.find(
       (u) => u.username === username && u.password === password
     );
 
     try {
-      // Simulate an API call for login
       await new Promise((resolve, reject) => {
         setTimeout(() => {
-          // if user exist
           if (user) {
-            resolve("Login successful");
-            navigate("/main"); // Redirect to main page
+            resolve(user);
           } else {
             reject("Invalid username or password");
           }
         }, 1000);
       });
 
-      // Redirect to notes page or perform further actions
-      alert("Login successful!");
-      // Here you can redirect to another page or update the app state
+      dispatch(successLogin(user));
+
+      navigate("/");
     } catch (err) {
       setError(err as string);
     } finally {
@@ -69,8 +72,7 @@ const LoginPage = () => {
           <input
             type="text"
             placeholder="Username"
-            value={username}
-            onChange={(e) => setUsername(e.target.value)}
+            ref={usernameRef}
             required
           />
         </div>
@@ -79,13 +81,14 @@ const LoginPage = () => {
           <input
             type="password"
             placeholder="Password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
+            ref={passwordRef}
             required
           />
         </div>
         <div>
-          <button type="submit">Login</button>
+          <button type="submit" disabled={loading}>
+            {loading ? "Logging in..." : "Login"}
+          </button>
         </div>
       </form>
       {error && <p style={{ color: "red" }}>{error}</p>}

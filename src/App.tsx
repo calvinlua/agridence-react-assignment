@@ -18,16 +18,17 @@ const router = createBrowserRouter([
     errorElement: <div>Not Found</div>,
   },
   {
+    path: "/",
     element: <ProtectedRoute />,
     children: [
       {
-        path: "/",
-        element: <Navigate to="/main" replace />,
-      },
-      {
-        path: "/main",
+        path: "main",
         element: <NotesPage />,
         errorElement: <div>Not Found</div>,
+      },
+      {
+        path: "/",
+        element: <Navigate to="/main" replace />,
       },
     ],
   },
