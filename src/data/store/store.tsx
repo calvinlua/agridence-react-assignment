@@ -1,16 +1,15 @@
-//store for react redux
-
 import { combineReducers } from "redux";
 import { persistStore, persistReducer } from "redux-persist";
-import storage from "redux-persist/lib/storage"; // defaults to localStorage for web
+import storage from "redux-persist/lib/storage";
 import AccountReducer from "../account/accountSlice";
 import NotesReducer from "../notes/notesSlice";
 import { configureStore } from "@reduxjs/toolkit";
 
 const persistConfig = {
   key: "root",
-  storage: storage, // store in localStorage
+  storage: storage,
   whitelist: ["notes"],
+  blacklist: ["account"],
 };
 
 const appReducer = combineReducers({
@@ -21,7 +20,6 @@ const appReducer = combineReducers({
 const persistedReducer = persistReducer(persistConfig, appReducer);
 
 export const store = configureStore({
-  // Create a store with the combined reducers
   reducer: persistedReducer,
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({ serializableCheck: false }), // Disable serializable check for persist
